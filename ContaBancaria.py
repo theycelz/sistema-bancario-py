@@ -35,3 +35,5 @@ class ContaBancaria:
         else:
             print("Transferência falhou devido a saldo insuficiente.")
             return False
+class ContaCorrente:
+    pass 
