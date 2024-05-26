@@ -1,3 +1,4 @@
+from Transacao import Deposito
 class Cliente:
     def __init__(self, nome:str, _cpf:str, _endereco:str):
         self.nome = nome
@@ -22,6 +23,23 @@ class PessoaFisica(Cliente):
         clientes_filtrados = [cliente for cliente in clientes if cliente._cpf == cpf]
         return clientes_filtrados[0] if clientes_filtrados else None
 
+    def recuperar_conta(self, cliente):
+        if not cliente.contas:
+            print("Cliente não possui contas.")
+            return 
+        
+        if len(cliente.contas) > 1:
+            print("Escolha a conta:")
+            for i, conta in enumerate(cliente.contas):
+                print(f"{i+1}. {conta}")
+            escolha = int(input("Digite o número da conta: "))
+            if escolha < 1 or escolha > len(cliente.contas):
+                print("Escolha inválida.")
+                return cliente.contas[0]
+            return cliente.contas[escolha-1]
+        
+        return cliente.contas[0]
+
     def depositar(self, clientes):
         _cpf = input("Digite o CPF do titular da conta: ")
         cliente = cliente.filtrar_cliente_por_cpf(_cpf, clientes)
@@ -33,7 +51,7 @@ class PessoaFisica(Cliente):
         valor = float(input("Digite o valor do depósito: "))
         transacao = Deposito(valor)
 
-        conta = recuperar_conta(cliente)
+        conta = cliente.recuperar_conta(cliente)  
 
         if not conta:
             print("Conta não encontrada.")
