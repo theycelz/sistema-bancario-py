@@ -1,4 +1,4 @@
-from Transacao import Deposito
+from Transacao import Deposito, Saque
 class Cliente:
     def __init__(self, nome:str, _cpf:str, _endereco:str):
         self.nome = nome
@@ -50,11 +50,26 @@ class PessoaFisica(Cliente):
         
         valor = float(input("Digite o valor do depósito: "))
         transacao = Deposito(valor)
-
         conta = cliente.recuperar_conta(cliente)  
 
         if not conta:
             print("Conta não encontrada.")
             return
+        cliente.realizar_transacao(conta, transacao)
+
+    def sacar(self, clientes):
+        _cpf = input("Digite o CPF do titular da conta: ")
+        cliente = cliente.filtrar_cliente_por_cpf(_cpf, clientes)
+
+        if not cliente:
+            print("Cliente não encontrado.")
+            return
         
+        valor = float(input("Digite o valor do saque: "))
+        transacao = Saque(valor)
+        conta = cliente.recuperar_conta(cliente)  
+
+        if not conta:
+            print("Conta não encontrada.")
+            return
         cliente.realizar_transacao(conta, transacao)
