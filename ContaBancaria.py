@@ -1,4 +1,5 @@
 from Historico import Historico
+from Historico import Saque
 class ContaBancaria:
     def __init__(self, _numero:int, _agencia:int, _titular:str, _saldo:float, _historico:Historico):
         self._numero = _numero
@@ -45,30 +46,19 @@ def sacar(self, valor: float) -> bool:
         print(f"Saque de R${valor:.2f} realizado com sucesso.")
         return True
 
-    
-
-'''
-    def sacar(self, valor:float) -> bool:
-        if valor <= 0:
-            print("O valor de saque deve ser positivo.")
-            return False
-        if valor > self.saldo:
-            print("Saldo insuficiente.")
-            return False
-        self.saldo -= valor
+def depositar(self, valor: float):
+    if valor <= 0:
+        print("O valor de depósito deve ser positivo.")
+        return False
+    else:
+        self._saldo += valor
+        print(f"Depósito de R${valor:.2f} realizado com sucesso.")
         return True
 
-    def depositar(self, valor:float):
-        if valor <= 0:
-            print("O valor de depósito deve ser positivo.")
-            return
-        self.saldo += valor
-
+''''
     def visualizar_saldo(self) -> float:
         return self.saldo
 
-    def extrato(self)->str:
-        return f"Titular: {self.titular}\nNúmero da conta: {self.numero}\nSaldo: {self.saldo}"
 
     def transferir(self, destino: 'ContaBancaria', valor:float) -> bool:
         
@@ -80,4 +70,30 @@ def sacar(self, valor: float) -> bool:
             print("Transferência falhou devido a saldo insuficiente.")
             return False '''
 class ContaCorrente:
-    pass 
+    def __init__(self, _numero:int, _titular:str, _historico:Historico, _limite:float=700, limite_saques:int=3):
+        super().__init__(_numero, _titular, _historico)
+        self._numero = _numero
+        self._limite = _limite
+        self._limite_saques = limite_saques
+
+    def sacar(self, valor: float) -> bool:
+
+        numero_saques = len([transacao for transacao in self._historico.transacoes if transacao["tipo"] == Saque.__name__])
+        
+        excedeu_limite = valor > self._limite 
+        excedeu_limite_saques = numero_saques >= self._limite_saques
+        
+        if excedeu_limite:
+            print("Saque não permitido, o valor excedeu limite.")
+        elif excedeu_limite_saques:
+            print("Saque não permitido, excedeu o limite de saques.")
+        else:
+            return super().sacar(valor)
+        return False
+    
+    def __str__(self):
+        return f"""\
+        Agência:\t{self.agencia}
+        Número:\t\t{self.numero}
+        Titular:\t{self.titular}"""
+

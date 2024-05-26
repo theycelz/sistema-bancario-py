@@ -1,7 +1,15 @@
-from abc import ABC, abstractmethod
-
+from abc import ABC, abstractmethod, abstractclassmethod
+from ContaBancaria import ContaBancaria
 class Transacao(ABC):
-    pass
+    @property
+    @abstractmethod
+    def valor(self):
+        pass
+    
+    @classmethod
+    @abstractclassmethod
+    def registrar(cls, conta):
+        pass
 
 class Deposito:
     pass
