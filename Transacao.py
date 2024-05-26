@@ -8,11 +8,35 @@ class Transacao(ABC):
     
     @classmethod
     @abstractclassmethod
-    def registrar(cls, conta):
+    def registrar(cls, conta:ContaBancaria):
         pass
 
 class Deposito:
-    pass
+    def __init__(self, valor:float):
+        self._valor = valor
+    
+    @property
+    def valor(self):
+        return self._valor
+    
+    def registrar(self, conta:ContaBancaria):
+        transacao_completa = conta.depositar(self.valor)
+        if transacao_completa:
+            conta.historico.adicionar_transacao(self)
+        else:
+            print("Transação não realizada.")
 
 class Saque:
-    pass
+    def __init__(self, valor:float):
+        self._valor = valor
+    
+    @property
+    def valor(self):
+        return self._valor
+    
+    def registrar(self, conta:ContaBancaria):
+        transacao_completa = conta.sacar(self.valor)
+        if transacao_completa:
+            conta.historico.adicionar_transacao(self)
+        else:
+            print("Transação não realizada.")
