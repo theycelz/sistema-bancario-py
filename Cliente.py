@@ -1,4 +1,6 @@
 from Transacao import Deposito, Saque
+from ContaBancaria import ContaCorrente
+import textwrap
 
 CLIENTE_NAO_ENCONTRADO = "Cliente não encontrado."
 CPF_PROMPT = "Digite o CPF do titular da conta: "
@@ -44,6 +46,8 @@ class PessoaFisica(Cliente):
             return cliente.contas[escolha - 1]
 
         return cliente.contas[0]
+    
+
 
     def depositar(self, clientes):
         _cpf = input(CPF_PROMPT)
@@ -78,6 +82,7 @@ class PessoaFisica(Cliente):
             print("Conta não encontrada.")
             return
         cliente.realizar_transacao(conta, transacao)
+    
 
     def exibir_extrato(self, clientes):
         _cpf = input(CPF_PROMPT)
@@ -105,3 +110,45 @@ class PessoaFisica(Cliente):
         print(extrato)
         print(f"\nSaldo atual: R${conta.saldo:.2f}")
         print("===================================")
+
+    def criar_conta(self, clientes):
+        _cpf = input(CPF_PROMPT)
+        cliente = self.filtrar_cliente_por_cpf(_cpf, clientes)
+
+        if not cliente:
+            print(CLIENTE_NAO_ENCONTRADO)
+            return None
+
+        else:
+            numero = int(input("Digite o número da conta: "))
+            titular = input("Digite o nome do titular: ")
+            saldo = float(input("Digite o saldo inicial: "))
+            conta = ContaCorrente(numero, titular, saldo)
+            cliente.adicionar_conta(conta)
+            print("Conta criada com sucesso.")
+            return conta
+    
+    def listar_contas(self,contas):
+        for conta in contas: 
+            print("="*100)
+            print(textwrap.dedent(str(conta)))
+
+    def criar_cliente(self,clientes):
+        cpf = input("Digite o CPF do cliente: ")
+        cliente = self.filtrar_cliente_por_cpf(cpf,clientes)
+        if cliente:
+            print("Cliente já cadastrado.")
+            return cliente
+        
+        nome = input("Digite o nome do cliente: ")
+        endereco = input("Digite o endereço do cliente: ")
+        data_nascimento = input("Digite a data de nascimento do cliente: ")
+        cliente = PessoaFisica(nome,endereco,data_nascimento,cpf)
+        clientes.append(cliente)
+        print("Cliente criado com sucesso.")
+        return cliente
+
+    def listar_clientes(self,clientes):
+        for cliente in clientes:
+            print("="*100)
+            print(f"Nome: {cliente.nome}\nCPF: {cliente._cpf}\nEndereço: {cliente._endereco}\nData de Nascimento: {cliente.data_nascimento}")
